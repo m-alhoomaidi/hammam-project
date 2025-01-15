@@ -1,7 +1,6 @@
 import { Appointment } from '../../../domain/models/Appointment';
 import { IAppointmentRepository } from '../../../domain/contracts/IAppointmentRepository';
 import { CreateAppointment } from './CreateAppointment';
-import { Patient } from '../../../domain/models/Patient';
 import { CreateAppointmentResponse } from './CreateAppointmentResponse';
 import { Injectable } from '@nestjs/common';
 
@@ -14,7 +13,8 @@ export class CreateAppointmentHandler {
   ): Promise<CreateAppointmentResponse> {
     const appointment = Appointment.create(
       command.slotId,
-      Patient.of(command.patientId, command.patientName),
+      command.patientId,
+      command.patientName,
       command.reservedAt,
     );
 

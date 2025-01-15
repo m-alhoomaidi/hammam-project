@@ -11,13 +11,19 @@ export class Appointment {
 
   static create(
     slotId: string,
-    patient: Patient,
+    patientId: string,
+    patientName: string,
     reservedAt: Date,
   ): Appointment {
     if (isNaN(reservedAt.getTime())) {
       throw new Error('Invalid appointment data');
     }
 
-    return new Appointment(guid(), slotId, patient, reservedAt);
+    return new Appointment(
+      guid(),
+      slotId,
+      Patient.of(patientId, patientName),
+      reservedAt,
+    );
   }
 }
