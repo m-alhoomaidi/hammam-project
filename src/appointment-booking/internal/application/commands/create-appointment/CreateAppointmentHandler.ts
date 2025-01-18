@@ -1,0 +1,64 @@
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { AppointmentCreatedEvent } from 'src/appointment-booking/internal/domain/events/appointment-created.event';
+import {
+  APPOINTMENT_REPOSITORY,
+  IAppointmentRepository,
+} from '../../../domain/contracts/IAppointmentRepository';
+import {
+  DOCTOR_AVAILABILITY_GATEWAY,
+  IDoctorAvailabilityGateway,
+} from '../../../domain/contracts/IDoctorAvailabilityGateway';
+import { Appointment } from '../../../domain/models/Appointment';
+import { CreateAppointment } from './CreateAppointment';
+import { CreateAppointmentResponse } from './CreateAppointmentResponse';
+
+@Injectable()
+export class CreateAppointmentHandler {
+  constructor(
+    @Inject(APPOINTMENT_REPOSITORY)
+    private readonly appointmentRepo: IAppointmentRepository,
+    @Inject(DOCTOR_AVAILABILITY_GATEWAY)
+    private readonly doctorAvailabilityGateway: IDoctorAvailabilityGateway,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
+
+  async execute(
+    command: CreateAppointment,
+  ): Promise<CreateAppointmentResponse> {
+    const isAvailable = await this.doctorAvailabilityGateway.isSlotAvailable(
+      command.slotId,
+    );
+
+    if (!isAvailable) {
+      throw new HttpException('Slot is not available', HttpStatus.BAD_REQUEST);
+    }
+
+    const appointment = Appointment.create(
+      command.slotId,
+      command.patientId,
+      command.patientName,
+      new Date(command.reservedAt),
+    );
+
+    const appointmentBooked = await this.appointmentRepo.save(appointment);
+
+    this.eventEmitter.emit(
+      'appointment.created',
+      new AppointmentCreatedEvent(
+        appointmentBooked.id,
+        appointmentBooked.slotId,
+        appointmentBooked.patient.id,
+        appointmentBooked.patient.name,
+      ),
+    );
+
+    return {
+      id: appointmentBooked.id,
+      slotId: appointmentBooked.slotId,
+      patientId: appointmentBooked.patient.id,
+      patientName: appointmentBooked.patient.name,
+      reservedAt: appointmentBooked.reservedAt,
+    };
+  }
+}
