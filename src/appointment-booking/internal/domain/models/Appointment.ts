@@ -1,4 +1,3 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
 import { guid } from '../../../../shared/utils/guid';
 import { Patient } from './Patient';
 
@@ -17,10 +16,7 @@ export class Appointment {
     reservedAt: Date,
   ): Appointment {
     if (isNaN(reservedAt.getTime())) {
-      throw new HttpException(
-        'Invalid appointment data',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new Error('Invalid appointment data');
     }
 
     return new Appointment(

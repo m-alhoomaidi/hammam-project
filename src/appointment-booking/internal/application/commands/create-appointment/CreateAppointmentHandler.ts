@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AppointmentCreatedEvent } from 'src/appointment-booking/internal/domain/events/appointment-created.event';
 import {
@@ -31,7 +31,7 @@ export class CreateAppointmentHandler {
     );
 
     if (!isAvailable) {
-      throw new HttpException('Slot is not available', HttpStatus.BAD_REQUEST);
+      throw new Error('Slot is not available');
     }
 
     const appointment = Appointment.create(

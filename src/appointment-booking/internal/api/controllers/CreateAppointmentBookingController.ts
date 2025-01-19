@@ -1,4 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
 import { CreateAppointment } from '../../application/commands/create-appointment/CreateAppointment';
 import { CreateAppointmentHandler } from '../../application/commands/create-appointment/CreateAppointmentHandler';
 import { CreateAppointmentResponse } from '../../application/commands/create-appointment/CreateAppointmentResponse';
@@ -12,6 +18,10 @@ export class CreateAppointmentBookingController {
   async createAppointmentBooking(
     @Body('data') data: CreateAppointment,
   ): Promise<CreateAppointmentResponse> {
-    return this.createAppointmentHandler.execute(data);
+    try {
+      return await this.createAppointmentHandler.execute(data);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }

@@ -1,7 +1,7 @@
-import { DoctorAvailability } from '@doctor-availability/shared/DoctorAvailability';
-import { DOCTOR_AVAILABILITY } from '@doctor-availability/shared/IDoctorAvailability';
 import { Module } from '@nestjs/common';
 import { DoctorAvailabilityModule } from 'src/doctor-availability/doctor-availability.module';
+import { DoctorAvailability } from '../doctor-availability/shared/DoctorAvailability';
+import { DOCTOR_AVAILABILITY } from '../doctor-availability/shared/IDoctorAvailability';
 import { CreateAppointmentBookingController } from './internal/api/controllers/CreateAppointmentBookingController';
 import { GetAvailableSlotsController } from './internal/api/controllers/GetAvailableSlotsController';
 import { commandHandlers } from './internal/application/commands';
@@ -10,7 +10,6 @@ import { APPOINTMENT_REPOSITORY } from './internal/domain/contracts/IAppointment
 import { DOCTOR_AVAILABILITY_GATEWAY } from './internal/domain/contracts/IDoctorAvailabilityGateway';
 import { DoctorAvailabilityGateway } from './internal/infrastructure/gateways/DoctorAvailabilityGateway';
 import { AppointmentRepository } from './internal/infrastructure/repositories/AppointmentRepo';
-
 @Module({
   imports: [DoctorAvailabilityModule],
   controllers: [

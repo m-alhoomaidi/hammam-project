@@ -33,4 +33,11 @@ export class DoctorAvailabilityRepository {
       this.slots[index] = SlotMapper.toPersistence(updatedSlot);
     }
   }
+
+  findUpcomingReservations(): Promise<Slot[]> {
+    const slots = this.slots.filter(
+      (slot) => slot.isReserved && slot.time > new Date(),
+    );
+    return Promise.resolve(slots.map((slot) => SlotMapper.toDomain(slot)));
+  }
 }

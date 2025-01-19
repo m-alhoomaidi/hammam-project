@@ -18,4 +18,8 @@ export class DoctorAvailability implements IDoctorAvailability {
     const slot = await this.repository.findSlotById(slotId);
     return slot ? !slot.isSlotReserved() : false;
   }
+
+  async findUpcomingReservations(): Promise<Slot[]> {
+    return this.repository.findUpcomingReservations();
+  }
 }

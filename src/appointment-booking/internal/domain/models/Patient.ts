@@ -1,5 +1,3 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
-
 export class Patient {
   private constructor(
     private readonly _id: string,
@@ -8,7 +6,7 @@ export class Patient {
 
   static of(id: string, name: string): Patient {
     if (!name) {
-      throw new HttpException('Invalid patient data', HttpStatus.BAD_REQUEST);
+      throw Error('data must have a name');
     }
 
     return new Patient(id, name);

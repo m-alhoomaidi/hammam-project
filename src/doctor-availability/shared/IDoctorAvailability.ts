@@ -5,4 +5,5 @@ export interface IDoctorAvailability {
   findAvailableSlots(): Promise<Slot[]>;
   findSlotById(slotId: string): Promise<Slot | undefined>;
   isAvailable(slotId: string): Promise<boolean>;
+  findUpcomingReservations(): Promise<Slot[]>;
 }
