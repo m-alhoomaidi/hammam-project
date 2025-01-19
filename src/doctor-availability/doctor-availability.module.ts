@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
-import { DoctorAvailabilityController } from './api/controllers/doctor-availability.controller';
-import { DoctorAvailabilityService } from './application/doctor-availability.service';
-import { DoctorAvailabilityRepository } from './repository/doctor-availability.repository';
-import { DoctorAvailabilityDomainService } from './domain/doctor-availability-domain.service';
+import { DoctorAvailabilityController } from './internal/api/controllers/doctor-availability.controller';
+import { DoctorAvailabilityService } from './internal/application/doctor-availability.service';
+import { eventHandlers } from './internal/application/event-handlers';
+import { DoctorAvailabilityDomainService } from './internal/domain/doctor-availability-domain.service';
+import { DoctorAvailabilityRepository } from './internal/infrastructure/repository/doctor-availability.repository';
+import { DoctorAvailability } from './shared/DoctorAvailability';
 
 @Module({
   controllers: [DoctorAvailabilityController],
@@ -10,7 +12,9 @@ import { DoctorAvailabilityDomainService } from './domain/doctor-availability-do
     DoctorAvailabilityService,
     DoctorAvailabilityRepository,
     DoctorAvailabilityDomainService,
+    DoctorAvailability,
+    ...eventHandlers,
   ],
-  exports: [],
+  exports: [DoctorAvailability, DoctorAvailabilityRepository],
 })
 export class DoctorAvailabilityModule {}
