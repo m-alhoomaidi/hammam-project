@@ -1,5 +1,5 @@
-import { SendNotification } from './interfaces/INotification';
-import { Notification } from './domain/notification';
+import { SendNotification } from './domain/interfaces/INotification';
+import { Notification } from './domain/entities/notification';
 
 export class LoggerNotification implements SendNotification {
   async send(title: string, message: string): Promise<Notification> {
