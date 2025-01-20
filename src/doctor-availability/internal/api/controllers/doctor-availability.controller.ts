@@ -16,7 +16,7 @@ export class DoctorAvailabilityController {
   }
 
   @Get('/')
-  getAvailableSlots(): Promise<SlotResponseDto[]> {
+  getAllSlots(): Promise<SlotResponseDto[]> {
     return this.service.findAllSlots();
   }
 }

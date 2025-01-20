@@ -19,7 +19,7 @@ export class CreateAppointmentBookingController {
     @Body('data') data: CreateAppointment,
   ): Promise<CreateAppointmentResponse> {
     try {
-      return await this.createAppointmentHandler.execute(data);
+      return this.createAppointmentHandler.execute(data);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
