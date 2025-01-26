@@ -1,3 +1,4 @@
+import { NotificationModule } from '@/notification/notification.module';
 import { Module } from '@nestjs/common';
 import { DoctorAvailabilityModule } from 'src/doctor-availability/doctor-availability.module';
 import { DoctorAvailability } from '../doctor-availability/shared/DoctorAvailability';
@@ -8,10 +9,12 @@ import { commandHandlers } from './internal/application/commands';
 import { queryHandlers } from './internal/application/queries';
 import { APPOINTMENT_REPOSITORY } from './internal/domain/contracts/IAppointmentRepository';
 import { DOCTOR_AVAILABILITY_GATEWAY } from './internal/domain/contracts/IDoctorAvailabilityGateway';
+import { NOTIFICATION_SERVICE } from './internal/domain/contracts/INotificationService';
 import { DoctorAvailabilityGateway } from './internal/infrastructure/gateways/DoctorAvailabilityGateway';
 import { AppointmentRepository } from './internal/infrastructure/repositories/AppointmentRepo';
+import { NotificationService } from './internal/infrastructure/services/NotificationService';
 @Module({
-  imports: [DoctorAvailabilityModule],
+  imports: [DoctorAvailabilityModule, NotificationModule],
   controllers: [
     CreateAppointmentBookingController,
     GetAvailableSlotsController,
@@ -30,6 +33,10 @@ import { AppointmentRepository } from './internal/infrastructure/repositories/Ap
     {
       provide: DOCTOR_AVAILABILITY,
       useClass: DoctorAvailability,
+    },
+    {
+      provide: NOTIFICATION_SERVICE,
+      useClass: NotificationService,
     },
   ],
   exports: [DoctorAvailabilityGateway],

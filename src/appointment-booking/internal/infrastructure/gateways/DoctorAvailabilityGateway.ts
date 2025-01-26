@@ -18,4 +18,8 @@ export class DoctorAvailabilityGateway implements IDoctorAvailabilityGateway {
   isSlotAvailable(slotId: string): Promise<boolean> {
     return this.DoctorAvailability.isAvailable(slotId);
   }
+
+  getSlotById(slotId: string): Promise<any> {
+    return this.DoctorAvailability.findSlotById(slotId);
+  }
 }
