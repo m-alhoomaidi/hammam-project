@@ -1,3 +1,7 @@
+import {
+  INotificationService,
+  NOTIFICATION_SERVICE,
+} from '@/appointment-booking/internal/domain/contracts/INotificationService';
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AppointmentCreatedEvent } from 'src/appointment-booking/internal/domain/events/appointment-created.event';
@@ -21,6 +25,8 @@ export class CreateAppointmentHandler {
     @Inject(DOCTOR_AVAILABILITY_GATEWAY)
     private readonly doctorAvailabilityGateway: IDoctorAvailabilityGateway,
     private readonly eventEmitter: EventEmitter2,
+    @Inject(NOTIFICATION_SERVICE)
+    private readonly noificationService: INotificationService,
   ) {}
 
   async execute(
@@ -38,7 +44,7 @@ export class CreateAppointmentHandler {
       command.slotId,
       command.patientId,
       command.patientName,
-      new Date(command.reservedAt),
+      new Date(),
     );
 
     const appointmentBooked = await this.appointmentRepo.save(appointment);
@@ -52,6 +58,16 @@ export class CreateAppointmentHandler {
         appointmentBooked.patient.name,
       ),
     );
+
+    const slot = await this.doctorAvailabilityGateway.getSlotById(
+      appointmentBooked.slotId,
+    );
+
+    this.noificationService.sendNotification('Slot Reserved', 'Slot reserved', {
+      doctorName: slot.getDetails().doctorName,
+      time: slot.getDetails().time,
+      patientName: appointmentBooked.patient.name,
+    });
 
     return {
       id: appointmentBooked.id,

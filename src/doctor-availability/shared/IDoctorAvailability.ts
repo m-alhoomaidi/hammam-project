@@ -1,5 +1,5 @@
 import { Slot } from '../internal/domain/slot';
-export const DOCTOR_AVAILABILITY = Symbol('IDoctorAvailability');
+export const DOCTOR_AVAILABILITY = Symbol('Doctor_Availability');
 
 export interface IDoctorAvailability {
   findAvailableSlots(): Promise<Slot[]>;

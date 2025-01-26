@@ -1,5 +1,4 @@
-import { Transform } from 'class-transformer';
-import { IsDate, IsNotEmpty, IsUUID, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export class CreateAppointment {
   @IsUUID()
@@ -11,8 +10,4 @@ export class CreateAppointment {
   @IsString()
   @IsNotEmpty()
   patientName: string;
-
-  @IsDate()
-  @Transform(({ value }) => new Date(value))
-  reservedAt: Date;
 }
